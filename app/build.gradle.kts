@@ -69,5 +69,6 @@ dependencies {
     implementation  (libs.androidx.lifecycle.viewmodel.compose.android)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation(libs.androidx.navigation.compose)
 
 }

@@ -17,7 +17,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,19 +31,25 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gym.retrofit.Gym
 
 @Composable
-fun GymsScreen() {
+fun GymsScreen(onItemClick: (Int) -> Unit = {}) {
     val viewModel: GymsViewModel = viewModel()
     LazyColumn() {
         items(viewModel.state) { gym ->
-            GymItem(gym) {
-                viewModel.toggleFavorite(it)
-            }
+            GymItem(
+                gym = gym,
+                onFavoriteIconClick = {
+                    viewModel.toggleFavorite(it)
+                },
+                onItemClick = { id ->
+                    onItemClick(id)
+                }
+            )
         }
     }
 }
 
 @Composable
-fun GymItem(gym: Gym, onClick: (Int) -> Unit) {
+fun GymItem(gym: Gym, onFavoriteIconClick: (Int) -> Unit, onItemClick: (Int) -> Unit = {}) {
     val favoriteIcon = if (gym.isFavorite) {
         Icons.Filled.Favorite
     } else {
@@ -53,7 +58,11 @@ fun GymItem(gym: Gym, onClick: (Int) -> Unit) {
 
     Card(
         elevation = CardDefaults.elevatedCardElevation(4.dp),
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable {
+                onItemClick(gym.id)
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -66,7 +75,7 @@ fun GymItem(gym: Gym, onClick: (Int) -> Unit) {
                 Modifier.weight(0.15f),
                 "Favorite Icon"
             ) {
-                onClick(gym.id)
+                onFavoriteIconClick(gym.id)
             }
         }
     }
@@ -75,14 +84,14 @@ fun GymItem(gym: Gym, onClick: (Int) -> Unit) {
 
 @Composable
 fun Icon(
-    favoriteIcon: ImageVector,
+    Icon: ImageVector,
     modifier: Modifier,
     contentDescription: String,
     onClick: () -> Unit = {}
 ) {
 
     Image(
-        imageVector = favoriteIcon,
+        imageVector = Icon,
         contentDescription = contentDescription,
         colorFilter = ColorFilter.tint(Color.Red),
         modifier = modifier
@@ -120,8 +129,10 @@ fun GymDetails(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun GymsScreenPreview() {
     GymsScreen()
 }
+*/
