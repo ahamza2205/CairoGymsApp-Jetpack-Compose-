@@ -94,8 +94,12 @@ fun Icon(
 }
 
 @Composable
-fun GymDetails(gym: Gym, modifier: Modifier) {
-    Column(modifier = modifier) {
+fun GymDetails(
+    gym: Gym,
+    modifier: Modifier,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start
+) {
+    Column(modifier = modifier, horizontalAlignment = horizontalAlignment) {
         Text(
             text = gym.name,
             style = TextStyle(
